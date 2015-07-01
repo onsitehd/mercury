@@ -70,36 +70,37 @@ class @Mercury.Snippet
     @setOptions(options)
 
 
-  getHTML: (context, callback = null) ->
-    elementClass = "#{@name}-snippet"
-    elementClass += " #{@wrapperClass}" if @wrapperClass
+  getHTML: (selection, context, callback = null) ->
     element = jQuery("<#{@wrapperTag}>", {
-      class: elementClass
+      class: "#{@name}-snippet"
       contenteditable: "false"
       'data-snippet': @identity
       'data-version': @version
     }, context)
     element.html("[#{@identity}]")
-    @loadPreview(element, callback)
+    @loadPreview(element, callback, selection)
     return element
 
 
   getText: (callback) ->
     return "[--#{@identity}--]"
 
+  loadPreview: (element, callback = null, selection) ->
+    element_id = $(selection.clone.commonAncestorContainer).attr('id')
 
-  loadPreview: (element, callback = null) ->
-    jQuery.ajax Snippet.previewUrl(@name), {
+    jQuery.ajax Mercury.Snippet.previewUrl(@name), {
       headers: Mercury.ajaxHeaders()
       type: Mercury.config.snippets.method
       data: @options
       success: (data) =>
+        $("#mercury_iframe").contents().find("##{element_id}").html(data)
         @data = data
         element.html(data)
         callback() if callback
+        Mercury.trigger('auto_resize')
       error: =>
-        Mercury.notify('Error loading the preview for the \"%s\" snippet.', @name)
-    }
+          Mercury.notify('Error loading the preview for the \"%s\" snippet.', @name)
+      }
 
 
   displayOptions: ->

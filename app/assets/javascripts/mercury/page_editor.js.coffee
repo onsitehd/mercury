@@ -218,6 +218,7 @@ class @Mercury.PageEditor
 
 
   save: (callback) ->
+    Mercury.trigger('auto_resize')
     url = @saveUrl ? Mercury.saveUrl ? @iframeSrc()
     data = @serialize()
     data = {content: data}

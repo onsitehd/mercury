@@ -454,9 +454,7 @@ class @Mercury.Regions.Full extends Mercury.Region
 
     insertSnippet: (selection, options) ->
       snippet = options.value
-      if (existing = @element.find("[data-snippet=#{snippet.identity}]")).length
-        selection.selectNode(existing.get(0))
-      selection.insertNode(snippet.getHTML(@document))
+      snippet.getHTML(selection, @document, => @pushHistory())
 
     editSnippet: ->
       return unless @snippet
