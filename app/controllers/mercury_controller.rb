@@ -2,11 +2,11 @@ class MercuryController < ActionController::Base
   include ::Mercury::Authentication
 
   protect_from_forgery
-  before_filter :authenticate, :only => :edit
+  before_action :authenticate, :only => :edit
   layout false
 
   def edit
-    render :text => '', :layout => 'mercury'
+    render html: '', :layout => 'mercury'
   end
 
   def resource
@@ -23,7 +23,7 @@ class MercuryController < ActionController::Base
   end
 
   def test_page
-    render :text => params
+    render html: params
   end
 
   private
